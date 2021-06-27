@@ -1,0 +1,21 @@
+.ProfileTab > div {
+  margin-bottom: 10px;
+}
+
+.ProfileTab th {
+  text-align: right;
+}
+
+.ProfileTab td {
+  padding-left: 5px;
+}
+
+.contact-info-email {
+  text-transform: lowercase;
+}
+
+@media only screen and (min-width: 576px) {
+  .ProfileTab > div {
+    margin-bottom: 20px;
+  }
+}

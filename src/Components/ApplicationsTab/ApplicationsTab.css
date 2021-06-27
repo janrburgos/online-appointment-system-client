@@ -1,0 +1,35 @@
+.ApplicationsTab {
+  position: relative;
+}
+
+.reviewer-logout {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.application-history {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inner-header {
+  text-transform: capitalize;
+}
+
+.empty-tab {
+  margin-top: 50px;
+  font-style: italic;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+@media only screen and (min-width: 576px) {
+  .application-history {
+    margin-top: 15px;
+  }
+}

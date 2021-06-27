@@ -1,0 +1,24 @@
+.SetAppointmentDate {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.SetAppointmentDate select,
+.SetAppointmentDate button {
+  height: 30px;
+}
+
+.date-select-group {
+  display: flex;
+  gap: 5px;
+}
+
+@media only screen and (min-width: 576px) {
+  .SetAppointmentDate {
+    margin-top: 20px;
+  }
+}

@@ -1,0 +1,75 @@
+.LoginPage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.LoginPage a {
+  color: navy;
+}
+
+.LoginPage a:hover {
+  text-decoration: underline;
+}
+
+.login-error {
+  color: red;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+}
+
+.login-box p,
+.login-box button,
+.login-box input {
+  font-size: 1.2rem;
+}
+
+.login-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  position: relative;
+  height: 250px;
+  width: 300px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  box-shadow: 0 0 5px 2px silver;
+}
+
+.login-box p,
+.login-box button {
+  position: absolute;
+}
+
+.login-box p {
+  text-align: center;
+  width: calc(100% - 40px);
+  top: 25px;
+  font-weight: bold;
+}
+
+.login-box small {
+  cursor: pointer;
+}
+
+.login-box button {
+  width: 80px;
+  padding: 5px 0;
+  bottom: 25px;
+  left: 110px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.register-message {
+  margin-top: 5px;
+}

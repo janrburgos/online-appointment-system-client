@@ -1,0 +1,84 @@
+.RegistrationPage {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.RegistrationPage .form-container {
+  background-color: var(--primary-color);
+  width: min(800px, 100%);
+  border-radius: 10px;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 0 5px 2px silver;
+}
+
+.RegistrationPage .form-row {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto 60%;
+}
+
+.RegistrationPage label,
+.RegistrationPage select,
+.RegistrationPage option {
+  text-transform: capitalize;
+}
+
+.RegistrationPage label {
+  text-align: right;
+}
+
+#birth-month {
+  margin: 0 5px;
+}
+
+.RegistrationPage button {
+  width: 100px;
+  padding: 5px 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registration-error {
+  color: red;
+  margin-top: 10px;
+}
+
+@media only screen and (min-width: 768px) {
+  .RegistrationPage .form-container {
+    padding: 50px;
+  }
+  .RegistrationPage label,
+  .RegistrationPage input,
+  .RegistrationPage select,
+  .RegistrationPage option {
+    font-size: 1.3rem;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .RegistrationPage .form-container {
+    gap: 10px;
+  }
+
+  .RegistrationPage .form-row {
+    gap: 30px;
+  }
+
+  .RegistrationPage label,
+  .RegistrationPage input,
+  .RegistrationPage select,
+  .RegistrationPage option,
+  .RegistrationPage button {
+    font-size: 1.5rem;
+  }
+
+  .RegistrationPage button {
+    width: 120px;
+  }
+}
