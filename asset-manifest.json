@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/online-appointment-system-client/static/css/main.2dc3cbb1.chunk.css",
-    "main.js": "/online-appointment-system-client/static/js/main.4c2a0253.chunk.js",
-    "main.js.map": "/online-appointment-system-client/static/js/main.4c2a0253.chunk.js.map",
+    "main.css": "/online-appointment-system-client/static/css/main.7f771dde.chunk.css",
+    "main.js": "/online-appointment-system-client/static/js/main.ee3d076a.chunk.js",
+    "main.js.map": "/online-appointment-system-client/static/js/main.ee3d076a.chunk.js.map",
     "runtime-main.js": "/online-appointment-system-client/static/js/runtime-main.a4398a47.js",
     "runtime-main.js.map": "/online-appointment-system-client/static/js/runtime-main.a4398a47.js.map",
-    "static/js/2.3f3cfd97.chunk.js": "/online-appointment-system-client/static/js/2.3f3cfd97.chunk.js",
-    "static/js/2.3f3cfd97.chunk.js.map": "/online-appointment-system-client/static/js/2.3f3cfd97.chunk.js.map",
+    "static/js/2.87ae587f.chunk.js": "/online-appointment-system-client/static/js/2.87ae587f.chunk.js",
+    "static/js/2.87ae587f.chunk.js.map": "/online-appointment-system-client/static/js/2.87ae587f.chunk.js.map",
     "index.html": "/online-appointment-system-client/index.html",
-    "static/css/main.2dc3cbb1.chunk.css.map": "/online-appointment-system-client/static/css/main.2dc3cbb1.chunk.css.map",
-    "static/js/2.3f3cfd97.chunk.js.LICENSE.txt": "/online-appointment-system-client/static/js/2.3f3cfd97.chunk.js.LICENSE.txt"
+    "static/css/main.7f771dde.chunk.css.map": "/online-appointment-system-client/static/css/main.7f771dde.chunk.css.map",
+    "static/js/2.87ae587f.chunk.js.LICENSE.txt": "/online-appointment-system-client/static/js/2.87ae587f.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.a4398a47.js",
-    "static/js/2.3f3cfd97.chunk.js",
-    "static/css/main.2dc3cbb1.chunk.css",
-    "static/js/main.4c2a0253.chunk.js"
+    "static/js/2.87ae587f.chunk.js",
+    "static/css/main.7f771dde.chunk.css",
+    "static/js/main.ee3d076a.chunk.js"
   ]
 }
