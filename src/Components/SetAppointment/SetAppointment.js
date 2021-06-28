@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import ReactLoading from "react-loading";
 
 const SetAppointment = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const SetAppointment = () => {
     requirements: [],
   });
   const [selectedDocumentName, setSelectedDocumentName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const closeButtonClickHandler = () => {
     localStorage.setItem("highlightedNav", "applications");
@@ -26,6 +28,7 @@ const SetAppointment = () => {
   };
 
   const proceedButtonClickHandler = () => {
+    setLoading(true);
     let transactionRequirements = [
       ...selectedDocument.requirements.map((reqr) => {
         return { requirementName: reqr };
@@ -44,14 +47,29 @@ const SetAppointment = () => {
       .then((res) => {
         let newApplications = [...applications, res.data];
         dispatch({ type: "INSERT_APPLICATIONS", payload: newApplications });
-      });
-    localStorage.setItem("highlightedNav", "applications");
-    dispatch({ type: "EDIT_HIGHLIGHTED_NAV", payload: "applications" });
-    history.push("/main/applications");
+        localStorage.setItem("highlightedNav", "applications");
+        dispatch({ type: "EDIT_HIGHLIGHTED_NAV", payload: "applications" });
+        history.push("/main/applications");
+      })
+      .catch(axiosError);
+  };
+
+  const axiosError = (err) => {
+    setLoading(false);
+    alert("communication error");
   };
 
   return (
     <div className="SetAppointment">
+      {loading && (
+        <div className="loading-container">
+          <ReactLoading
+            type={"spokes"}
+            color={"var(--font-color)"}
+            width={50}
+          />
+        </div>
+      )}
       <div className="set-appointment-modal">
         <div className="select-title">
           <label htmlFor="select-document">

@@ -5,6 +5,7 @@ import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import axios from "axios";
+import ReactLoading from "react-loading";
 
 const ApplicationDetailTab = () => {
   const location = useLocation();
@@ -25,18 +26,22 @@ const ApplicationDetailTab = () => {
     "set appointment date"
   );
   const [reviewerRemarks, setReviewerRemarks] = useState("-");
+  const [loading, setLoading] = useState(false);
   const fileHandler = useRef(null);
 
   const updateApplicationsClickHandler = () => {
     axios(
       `https://online-appointment-system-be.herokuapp.com/api/applications/${applicantInfo._id}`
-    ).then((res) => {
-      dispatch({ type: "INSERT_APPLICATIONS", payload: res.data });
-      localStorage.setItem("applications", JSON.stringify(res.data));
-    });
+    )
+      .then((res) => {
+        dispatch({ type: "INSERT_APPLICATIONS", payload: res.data });
+        localStorage.setItem("applications", JSON.stringify(res.data));
+      })
+      .catch(axiosError);
   };
 
   const uploadDocumentClickHandler = (reqr, index) => {
+    setLoading(true);
     const file = fileHandler.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -76,12 +81,16 @@ const ApplicationDetailTab = () => {
             .then((res) => {
               setApplication(res.data);
             });
-        });
+        })
+        .then((res) => {
+          setLoading(false);
+        })
+        .catch(axiosError);
     };
   };
 
-  const setAppointmentDateHandler = (pickedDate) => {
-    axios
+  const setAppointmentDateHandler = async (pickedDate) => {
+    await axios
       .put(
         `https://online-appointment-system-be.herokuapp.com/api/applications/${application._id}`,
         {
@@ -94,33 +103,40 @@ const ApplicationDetailTab = () => {
         localStorage.setItem("application", JSON.stringify(res.data));
         updateApplicationsClickHandler();
         alert("Apointment date has been set");
-      });
+      })
+      .catch(axiosError);
     // add the new document to documents collection
-    axios.post(
-      "https://online-appointment-system-be.herokuapp.com/api/documents",
-      {
-        applicantId: application.applicantId,
-        docType: application.transactionDocument,
-        documentUrl:
-          "https://res.cloudinary.com/janrcloud/image/upload/v1624704185/online-appointment-system/Uploads/pdf-logo.svg",
-        dateUploaded: Date.now(),
-      }
-    );
+    await axios
+      .post(
+        "https://online-appointment-system-be.herokuapp.com/api/documents",
+        {
+          applicantId: application.applicantId,
+          docType: application.transactionDocument,
+          documentUrl:
+            "https://res.cloudinary.com/janrcloud/image/upload/v1624704185/online-appointment-system/Uploads/pdf-logo.svg",
+          dateUploaded: Date.now(),
+        }
+      )
+      .catch(axiosError);
     // create the document the applicant applied for
-    axios.post(
-      "https://online-appointment-system-be.herokuapp.com/api/createdoc",
-      {
-        folderName: moment(Date.now()).format("YYYY-MM-DD"),
-        fileName: `${applicantInfo.applicantNumber}-${
-          application.transactionDocument
-        }-${Date.now()}`,
-        documentName: application.transactionDocument,
-        applicantInfo,
-      }
-    );
+    await axios
+      .post(
+        "https://online-appointment-system-be.herokuapp.com/api/createdoc",
+        {
+          folderName: moment(Date.now()).format("YYYY-MM-DD"),
+          fileName: `${applicantInfo.applicantNumber}-${
+            application.transactionDocument
+          }-${Date.now()}`,
+          documentName: application.transactionDocument,
+          applicantInfo,
+        }
+      )
+      .catch(axiosError);
+    setLoading(false);
   };
 
   const sendApplicationClickHandler = () => {
+    setLoading(true);
     axios
       .put(
         `https://online-appointment-system-be.herokuapp.com/api/applications/${application._id}`,
@@ -130,13 +146,16 @@ const ApplicationDetailTab = () => {
         }
       )
       .then((res) => {
+        setLoading(false);
         setApplication(res.data);
         updateApplicationsClickHandler();
         alert("Application has been sent for review");
-      });
+      })
+      .catch(axiosError);
   };
 
   const cancelApplicationClickHandler = () => {
+    setLoading(true);
     axios
       .put(
         `https://online-appointment-system-be.herokuapp.com/api/applications/${application._id}`,
@@ -146,13 +165,16 @@ const ApplicationDetailTab = () => {
         }
       )
       .then((res) => {
+        setLoading(false);
         setApplication(res.data);
         updateApplicationsClickHandler();
         alert("Application has been cancelled");
-      });
+      })
+      .catch(axiosError);
   };
 
   const reviewerButtonClickHandler = () => {
+    setLoading(true);
     let currentApplicationStatus;
     axios(
       `https://online-appointment-system-be.herokuapp.com/api/applications/application-id/${application._id}`
@@ -172,19 +194,27 @@ const ApplicationDetailTab = () => {
               }
             )
             .then((res) => {
+              setLoading(false);
               setApplication(res.data);
               alert("Application reviewed");
               history.push("/reviewer/main");
             });
         } else {
+          setLoading(false);
           alert("Applicant cancelled the application");
           history.push("/reviewer/main");
         }
-      });
+      })
+      .catch(axiosError);
   };
 
   const backToPendingClickHandler = () => {
     history.push("/reviewer/main");
+  };
+
+  const axiosError = (err) => {
+    setLoading(false);
+    alert("communication error");
   };
 
   return (
@@ -193,6 +223,15 @@ const ApplicationDetailTab = () => {
         location.state.role === "reviewer" ? "ReviewerDetailTab" : null
       }`}
     >
+      {loading && (
+        <div className="loading-container">
+          <ReactLoading
+            type={"spokes"}
+            color={"var(--font-color)"}
+            width={50}
+          />
+        </div>
+      )}
       {location.state.role === "reviewer" && (
         <>
           <div className="reviewer-back-button">
@@ -270,7 +309,10 @@ const ApplicationDetailTab = () => {
       {location.state.role === "applicant" &&
         application.transactionStatus === "set appointment date" && (
           <SetAppointmentDate
-            setAppointmentDateHandler={setAppointmentDateHandler}
+            setAppointmentDateHandler={() => {
+              setLoading(true);
+              setAppointmentDateHandler();
+            }}
           />
         )}
       <div className="application-detail-bottom">

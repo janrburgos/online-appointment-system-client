@@ -1,8 +1,9 @@
 import "./ApplicantTop.css";
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import ReactLoading from "react-loading";
 
 const ApplicantTop = () => {
   const history = useHistory();
@@ -11,17 +12,18 @@ const ApplicantTop = () => {
   const applicantInfo = useSelector(
     (state) => state.applicantInfoReducer.applicantInfo
   );
+  const [loading, setLoading] = useState(false);
 
   const setAppointmentButtonClickHandler = () => {
     history.push("/main/set-appointment");
   };
 
   const changeAvatarInputHandler = () => {
+    setLoading(true);
     const file = avatarHandler.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      console.log(reader.result);
       axios
         .post(
           `https://online-appointment-system-be.herokuapp.com/api/upload/avatar`,
@@ -38,18 +40,35 @@ const ApplicantTop = () => {
               }
             )
             .then((res) => {
+              setLoading(false);
               dispatch({
                 type: "INSERT_APPLICANT_INFO",
                 payload: res.data,
               });
               localStorage.setItem("applicantInfo", JSON.stringify(res.data));
-            });
-        });
+            })
+            .catch(axiosError);
+        })
+        .catch(axiosError);
     };
+  };
+
+  const axiosError = (err) => {
+    setLoading(false);
+    alert("communication error");
   };
 
   return (
     <div className="ApplicantTop">
+      {loading && (
+        <div className="loading-container">
+          <ReactLoading
+            type={"spokes"}
+            color={"var(--font-color)"}
+            width={50}
+          />
+        </div>
+      )}
       <div className="applicant-main-top">
         <div className="avatar-container">
           <img src={applicantInfo.avatar} alt="avatar" />

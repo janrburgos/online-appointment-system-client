@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
+import ReactLoading from "react-loading";
 
 const LoginPage = ({ role }) => {
   const history = useHistory();
@@ -10,6 +11,7 @@ const LoginPage = ({ role }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -27,42 +29,50 @@ const LoginPage = ({ role }) => {
     // get applicant's information
     axios(
       `https://online-appointment-system-be.herokuapp.com/api/${role}s/${email}`
-    ).then((res) => {
-      if (res.data[0] === undefined) {
-        emailRef.current.focus();
-        return setLoginError("This email address is not registered");
-      } else if (res.data[0].password !== password) {
-        passwordRef.current.focus();
-        return setLoginError("This password is incorrect");
-      } else {
-        // goes to applicant or reviewer login success function
-        success(res.data[0]);
-      }
-    });
+    )
+      .then((res) => {
+        if (res.data[0] === undefined) {
+          setLoading(false);
+          emailRef.current.focus();
+          return setLoginError("This email address is not registered");
+        } else if (res.data[0].password !== password) {
+          setLoading(false);
+          passwordRef.current.focus();
+          return setLoginError("This password is incorrect");
+        } else {
+          // goes to applicant or reviewer login success function
+          success(res.data[0]);
+        }
+      })
+      .catch(axiosError);
   };
 
   const applicantLoginSuccess = (applicantInfo) => {
     // get all doctypes and save to redux
-    axios(
-      `https://online-appointment-system-be.herokuapp.com/api/doctypes`
-    ).then((res) => {
-      dispatch({ type: "INSERT_DOCTYPES", payload: res.data });
-      localStorage.setItem("doctypes", JSON.stringify(res.data));
-    });
+    axios(`https://online-appointment-system-be.herokuapp.com/api/doctypes`)
+      .then((res) => {
+        dispatch({ type: "INSERT_DOCTYPES", payload: res.data });
+        localStorage.setItem("doctypes", JSON.stringify(res.data));
+      })
+      .catch(axiosError);
     // get all applicant's applications and save to redux
     axios(
       `https://online-appointment-system-be.herokuapp.com/api/applications/${applicantInfo._id}`
-    ).then((res) => {
-      dispatch({ type: "INSERT_APPLICATIONS", payload: res.data });
-      localStorage.setItem("applications", JSON.stringify(res.data));
-    });
+    )
+      .then((res) => {
+        dispatch({ type: "INSERT_APPLICATIONS", payload: res.data });
+        localStorage.setItem("applications", JSON.stringify(res.data));
+      })
+      .catch(axiosError);
     // get all applicant's documents and save to redux
     axios(
       `https://online-appointment-system-be.herokuapp.com/api/documents/${applicantInfo._id}`
-    ).then((res) => {
-      dispatch({ type: "INSERT_DOCUMENTS", payload: res.data });
-      localStorage.setItem("documents", JSON.stringify(res.data));
-    });
+    )
+      .then((res) => {
+        dispatch({ type: "INSERT_DOCUMENTS", payload: res.data });
+        localStorage.setItem("documents", JSON.stringify(res.data));
+      })
+      .catch(axiosError);
     // saves applicant's information to redux
     dispatch({ type: "INSERT_APPLICANT_INFO", payload: applicantInfo });
     localStorage.setItem("applicantInfo", JSON.stringify(applicantInfo));
@@ -82,10 +92,12 @@ const LoginPage = ({ role }) => {
       })
       .then(() => {
         history.push("/reviewer/main");
-      });
+      })
+      .catch(axiosError);
   };
 
   const loginHandler = () => {
+    setLoading(true);
     if (role === "applicant") {
       loginValidation(role, applicantLoginSuccess);
     } else {
@@ -93,8 +105,22 @@ const LoginPage = ({ role }) => {
     }
   };
 
+  const axiosError = (err) => {
+    setLoading(false);
+    alert("communication error");
+  };
+
   return (
     <div className="LoginPage">
+      {loading && (
+        <div className="loading-container">
+          <ReactLoading
+            type={"spokes"}
+            color={"var(--font-color)"}
+            width={50}
+          />
+        </div>
+      )}
       <div className="login-box">
         <p className="title">Sign in to your account</p>
         <span className="login-error">{loginError}</span>

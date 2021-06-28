@@ -29,3 +29,12 @@ input[type="file"],
 select {
   cursor: pointer;
 }
+
+.loading-container {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

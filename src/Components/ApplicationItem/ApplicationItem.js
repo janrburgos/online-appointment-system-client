@@ -4,11 +4,13 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import ReactLoading from "react-loading";
 
 const ApplicationItem = (props) => {
   const dispatch = useDispatch();
   let receiptHandler = useRef(null);
   const [application, setApplication] = useState(props.application);
+  const [loading, setLoading] = useState(false);
 
   const applicationDetailsClickHandler = () => {
     localStorage.setItem("selectedDocumentIndex", 0);
@@ -24,6 +26,7 @@ const ApplicationItem = (props) => {
   };
 
   const uploadReceiptInputHandler = (applicationId) => {
+    setLoading(true);
     const file = receiptHandler.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -45,14 +48,30 @@ const ApplicationItem = (props) => {
               }
             )
             .then((res) => {
+              setLoading(false);
               setApplication(res.data);
             });
-        });
+        })
+        .catch(axiosError);
     };
+  };
+
+  const axiosError = (err) => {
+    setLoading(false);
+    alert("communication error");
   };
 
   return (
     <div className="ApplicationItem">
+      {loading && (
+        <div className="loading-container">
+          <ReactLoading
+            type={"spokes"}
+            color={"var(--font-color)"}
+            width={50}
+          />
+        </div>
+      )}
       <div className="application-card">
         <div className="application-buttons">
           <Link

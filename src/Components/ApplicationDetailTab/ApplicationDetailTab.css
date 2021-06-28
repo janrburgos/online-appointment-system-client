@@ -1,3 +1,7 @@
+.ApplicationDetailTab {
+  position: relative;
+}
+
 .reviewer-back-button {
   text-align: right;
   padding: 10px;
@@ -14,7 +18,8 @@
 }
 
 .application-detail-top,
-.application-detail-bottom {
+.application-detail-bottom,
+.send-application {
   display: grid;
   max-width: 1600px;
   margin: 0 auto;
@@ -62,8 +67,8 @@
   margin: auto 0;
 }
 
-.send-application span {
-  margin-left: 10px;
+.send-application button {
+  width: 150px;
 }
 
 .remarks-wrapper {

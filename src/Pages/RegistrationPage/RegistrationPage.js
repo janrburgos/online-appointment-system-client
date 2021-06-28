@@ -2,6 +2,7 @@ import "./RegistrationPage.css";
 import React, { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import ReactLoading from "react-loading";
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ const RegistrationPage = () => {
   const [currentAddress, setCurrentAddress] = useState("");
   const [permanentAddress, setPermanentAddress] = useState("");
   const [registrationError, setRegistrationError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
@@ -76,6 +78,7 @@ const RegistrationPage = () => {
   ];
 
   let registerButtonClickHandler = () => {
+    setLoading(true);
     setRegistrationError("");
 
     if (
@@ -90,14 +93,18 @@ const RegistrationPage = () => {
       currentAddress.trim() === "" ||
       permanentAddress.trim() === ""
     ) {
+      setLoading(false);
       return setRegistrationError("Do not leave any items blank");
     } else if (email.indexOf("@") === -1 || email.indexOf(".") === -1) {
+      setLoading(false);
       emailInput.current.focus();
       return setRegistrationError("Enter a valid email address");
     } else if (password.length < 4) {
+      setLoading(false);
       passwordInput.current.focus();
       return setRegistrationError("Password should have at least 4 characters");
     } else if (mobileNumber.length !== 10) {
+      setLoading(false);
       mobileInput.current.focus();
       return setRegistrationError(
         "Mobile number input must be equal to 10 numbers"
@@ -122,24 +129,43 @@ const RegistrationPage = () => {
 
     axios(
       `https://online-appointment-system-be.herokuapp.com/api/applicants/${email}`
-    ).then((res) => {
-      if (res.data[0] !== undefined) {
-        return setRegistrationError(
-          "The email address you provided is already registered"
-        );
-      }
-      axios
-        .post(
-          "https://online-appointment-system-be.herokuapp.com/api/applicants",
-          registerBody
-        )
-        .then(alert(`added ${firstName} ${lastName} to the database`));
-      history.push("/");
-    });
+    )
+      .then((res) => {
+        if (res.data[0] !== undefined) {
+          setLoading(false);
+          return setRegistrationError(
+            "The email address you provided is already registered"
+          );
+        } else {
+          axios
+            .post(
+              "https://online-appointment-system-be.herokuapp.com/api/applicants",
+              registerBody
+            )
+            .then(alert(`added ${firstName} ${lastName} to the database`))
+            .catch(axiosError);
+          history.push("/");
+        }
+      })
+      .catch(axiosError);
+  };
+
+  const axiosError = (err) => {
+    setLoading(false);
+    alert("communication error");
   };
 
   return (
     <div className="RegistrationPage">
+      {loading && (
+        <div className="loading-container">
+          <ReactLoading
+            type={"spokes"}
+            color={"var(--font-color)"}
+            width={50}
+          />
+        </div>
+      )}
       <div className="form-container">
         <div className="form-row">
           <label htmlFor="reg-email">email address</label>
