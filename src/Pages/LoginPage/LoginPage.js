@@ -122,7 +122,17 @@ const LoginPage = ({ role }) => {
         </div>
       )}
       <div className="login-box">
-        <p className="title">Sign in to your account</p>
+        <p className="title">
+          Sign{" "}
+          <Link to="/reviewer">
+            <span>in</span>
+          </Link>{" "}
+          to{" "}
+          <Link to="/">
+            <span>your</span>
+          </Link>{" "}
+          account
+        </p>
         <span className="login-error">{loginError}</span>
         <input
           type="email"

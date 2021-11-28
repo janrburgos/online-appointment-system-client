@@ -70,6 +70,15 @@
   cursor: pointer;
 }
 
+.title a {
+  color: var(--font-color);
+}
+
+.title a,
+.title a:hover {
+  text-decoration: none;
+}
+
 .register-message {
   margin-top: 5px;
 }
